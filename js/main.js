@@ -7,18 +7,22 @@ import { SettingsPanel } from "./ui/SettingsPanel.js";
 import { InputManager } from "./InputManager.js";
 import { TextBox } from "./ui/TextBox.js";
 
+// Set up the canvas and 2d rendering context.
 const canvas = document.createElement("canvas");
 const context = canvas.getContext("2d");
 
-context.imageSmoothingEnabled = true;
+// Set our initial canvas/context properties.
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 canvas.style.backgroundColor = "#fff5db";
+context.imageSmoothingEnabled = true;
 
+// Set our initial window/document properties.
 window.onresize = onResize;
 document.body.appendChild(canvas);
 document.body.style.overflow = "hidden";
 
+// Initialize instances of game logic and ui elements.
 const logic = new Logic();
 const inputMgr = new InputManager();
 const board = new Board();
@@ -26,18 +30,22 @@ const keyboard = new Keyboard(logic);
 const settingsButton = new TextBox("settings");
 const settingsPanel = new SettingsPanel();
 
+// Set out initial ui element properties.
 board.stroke = false;
 keyboard.stroke = false;
 settingsPanel.visible = false;
 
+// Add our interactive ui elements to our input manager.
 inputMgr.addElement(keyboard);
 inputMgr.addElement(settingsButton);
 inputMgr.addElement(settingsPanel);
 
+// Register document event listeners
 document.addEventListener("mousedown", inputMgr.onMouseDown.bind(inputMgr));
 document.addEventListener("touchstart", inputMgr.onTouchStart.bind(inputMgr));
 document.addEventListener("touchend", event => event.preventDefault());
 
+// Register all signal listeners.
 // The callbacks passed to these signals would preferably be lambda functions
 // passed directly into `receive` but there doesn't seem to be a way to type lambda
 // functions with JSDoc so I've thrown standard hoisted function definitions at the
@@ -50,17 +58,20 @@ settingsButton.onClick.receive(toggleSettingsPanel);
 
 settingsPanel.onClose.receive(toggleSettingsPanel);
 
+// Resize elements to window dimensions and render ui elements.
 resize();
 render();
 
+/**
+ * Resizes and positions all ui elements relative to the window size.
+ */
 function resize() {
+	// I promise that I'll make this much easier to parse at some point
 	const width = window.innerWidth;
 	const height = window.innerHeight;
 
 	canvas.width = width;
 	canvas.height = height;
-
-	// I promise that I'll make this much easier to parse at some point
 
 	const elementsVerticalMargin = 10;
 	const elementsHorizontalMargin = 10;
@@ -83,6 +94,9 @@ function resize() {
 	settingsPanel.position(width * 0.5, height * 0.5);
 }
 
+/**
+ * Renders all ui elements. Might have a stage manager later that handles all this.
+ */
 function render() {
 	context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
@@ -92,6 +106,9 @@ function render() {
 	settingsPanel.render(context);
 }
 
+/**
+ * Called when the window object fires a resize event.
+ */
 function onResize() {
 	resize();
 	render();
@@ -139,6 +156,12 @@ function onBackspacePress() {
 	render();
 }
 
+/**
+ * @callback toggleSettingsPanelCallback
+ * @returns {void}
+ */
+
+ /** @type {toggleSettingsPanelCallback} */
 function toggleSettingsPanel() {
 	const isVisible = settingsPanel.visible;
 
