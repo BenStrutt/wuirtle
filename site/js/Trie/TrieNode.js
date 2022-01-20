@@ -48,7 +48,6 @@ export class TrieNode {
 	/**
 	 * @param {string} char The character for which to add to list of existing children.
 	 * @param {boolean} isLeaf Whether the added node marks the end of a word.
-	 * @returns {undefined} `undefined`
 	 */
 	addChild(char, isLeaf) {
 		if (char.length > 1) {

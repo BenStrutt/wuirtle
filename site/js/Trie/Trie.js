@@ -24,16 +24,13 @@ export class Trie {
 	/**
 	 * Loads a list of words into this Trie.
 	 * @param {string[]} words An array of words to be loaded.
-	 * @returns {undefined} `undefined`
 	 */
 	load(words) {
 		this.#rootNode = new TrieNode(false);
 
 		/**
 		 * This variable will store our current node as we walk down the tree.
-		 * Its type is a union of `TrieNode` and `undefined` since it's theoretically
-		 * possible for `TrieNode#getChild` to return `undefined`.
-		 * @type {TrieNode | undefined}
+		 * @type {TrieNode}
 		 */
 		let currentNode;
 
