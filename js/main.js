@@ -29,6 +29,7 @@ inputMgr.addElement(settingsButton);
 
 document.addEventListener("mousedown", inputMgr.onMouseDown.bind(inputMgr));
 document.addEventListener("touchstart", inputMgr.onTouchStart.bind(inputMgr));
+document.addEventListener("touchend", event => event.preventDefault());
 
 // The callbacks passed to these signals would preferably be lambda functions
 // passed directly into `receive` but there doesn't seem to be a way to type lambda
