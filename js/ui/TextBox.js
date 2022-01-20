@@ -2,9 +2,18 @@
 
 import { RoundBox } from "./RoundBox.js";
 
-export class SettingsButton extends RoundBox {
-	constructor() {
+export class TextBox extends RoundBox {
+	/**
+	 * The text to be displayed inside box
+	 * @type {string}
+	 */
+	text;
+
+	/** @param {string} text */
+	constructor(text = "") {
 		super();
+
+		this.text = text;
 	}
 
 	/**
@@ -19,20 +28,24 @@ export class SettingsButton extends RoundBox {
 		const minSide = Math.min(this.width, this.height);
 		const fontSize = this.fontSize ? this.fontSize : Math.floor(minSide * 0.5);
 		const font = `${fontSize}px Arial, sans-serif`;
-		const text = "settings";
 
 		context.font = font;
 		context.textAlign = "center";
 		context.textBaseline = "alphabetic";
 		context.fillStyle = "black";
 
-		const { actualBoundingBoxAscent } = context.measureText(text);
+		let { x, y } = this;
+
+		const { actualBoundingBoxAscent } = context.measureText(this.text);
 		const halfHeight = Math.ceil(actualBoundingBoxAscent) * 0.5;
 
-		context.fillText(
-			text,
-			this.x,
-			this.y + halfHeight,
-		);
+		if (this.parent) {
+			const [ parentX, parentY ] = this.parentWorldPosition;
+
+			x += parentX - (this.parent.width * 0.5);
+			y += parentY - (this.parent.height * 0.5);
+		}
+
+		context.fillText(this.text, x, y + halfHeight);
 	}
 }

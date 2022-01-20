@@ -1,10 +1,16 @@
 "use strict";
 
-import { RoundBox } from "./RoundBox.js";
+import { TextBox } from "./TextBox.js";
 
-export class LetterTile extends RoundBox {
-	letter = "";
+export class LetterTile extends TextBox {
+	/** @type {number} */
 	fontSize;
+
+	/**
+	 * @private
+	 * @type {string}
+	 */
+	#_letter = "";
 
 	constructor(letter = "") {
 		super();
@@ -12,34 +18,12 @@ export class LetterTile extends RoundBox {
 		this.letter = letter;
 	}
 
-	/**
-	 * @override
-	 * @param {CanvasRenderingContext2D} context 
-	 */
-	render(context) {
-		if (!this.visible) { return; }
+	get letter() {
+		return this.#_letter;
+	}
 
-		super.render(context);
-
-		const minSide = Math.min(this.width, this.height);
-
-		const [ parentX, parentY ] = this.parentWorldPosition;
-
-		const fontSize = this.fontSize ? this.fontSize : Math.floor(minSide * 0.5);
-		const font = `${fontSize}px Arial, sans-serif`;
-
-		context.font = font;
-		context.textAlign = "center";
-		context.textBaseline = "alphabetic";
-		context.fillStyle = "black";
-
-		const { actualBoundingBoxAscent } = context.measureText(this.letter);
-		const halfHeight = Math.ceil(actualBoundingBoxAscent) * 0.5;
-
-		context.fillText(
-			this.letter,
-			this.x + (parentX - (this.parent.width * 0.5)),
-			this.y + halfHeight + (parentY - (this.parent.height * 0.5)),
-		);
+	set letter(letter) {
+		this.text = letter;
+		this.#_letter = letter;
 	}
 }

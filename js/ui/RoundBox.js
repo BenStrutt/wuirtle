@@ -23,7 +23,7 @@ export class RoundBox extends RenderNode {
 	 * shortest side of the box.
 	 * @type {number}
 	 */
-	cornerRadius = 30;
+	cornerRadius = 10;
 
 	/**
 	 * Whether the box is to be filled on render.
@@ -61,7 +61,7 @@ export class RoundBox extends RenderNode {
 
 		const width = this.width;
 		const height = this.height;
-		const radius = 10;
+		const radius = this.cornerRadius;
 
 		let { x, y } = this;
 		if (this.parent) {

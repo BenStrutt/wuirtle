@@ -3,9 +3,9 @@
 import { Logic } from "./Logic.js";
 import { Board } from "./ui/Board.js";
 import { Keyboard } from "./ui/Keyboard.js";
-import { SettingsButton } from "./ui/SettingsButton.js";
 import { SettingsPanel } from "./ui/SettingsPanel.js";
 import { InputManager } from "./InputManager.js";
+import { TextBox } from "./ui/TextBox.js";
 
 const canvas = document.createElement("canvas");
 const context = canvas.getContext("2d");
@@ -22,8 +22,9 @@ const logic = new Logic();
 const inputMgr = new InputManager();
 const board = new Board();
 const keyboard = new Keyboard(logic);
-const settingsButton = new SettingsButton();
+const settingsButton = new TextBox("settings");
 const settingsPanel = new SettingsPanel();
+settingsPanel.visible = false;
 
 inputMgr.addElement(keyboard);
 inputMgr.addElement(settingsButton);
@@ -41,7 +42,9 @@ logic.onLetterPress.receive(onLetterPress);
 logic.onEnterPress.receive(onEnterPress);
 logic.onBackspacePress.receive(onBackspacePress);
 
-settingsButton.onClick.receive(onSettingsPress);
+settingsButton.onClick.receive(toggleSettingsPanel);
+
+settingsPanel.onClose.receive(toggleSettingsPanel);
 
 resize();
 render();
@@ -56,7 +59,8 @@ function resize() {
 	// I promise that I'll make this much easier to parse at some point
 
 	const elementsVerticalMargin = 10;
-	const boardsGap = 10;
+	const elementsHorizontalMargin = 10;
+
 	const boardHeight = Math.min(height * 0.6, width - (elementsVerticalMargin * 2));
 	const keyboardHeight = Math.min(height * 0.3, ((width - (elementsVerticalMargin * 2)) * 0.5));
 
@@ -64,11 +68,15 @@ function resize() {
 	board.position(width * 0.5, height * 0.33);
 
 	keyboard.resize(keyboardHeight * 2, keyboardHeight);
-	keyboard.position(width * 0.5, board.y + (board.height * 0.5) + boardsGap + (keyboard.height * 0.5));
+	keyboard.position(width * 0.5, board.y + (board.height * 0.5) + elementsVerticalMargin + (keyboard.height * 0.5));
 
 	const settingsButtonHeight = Math.min(height - (keyboard.y + (keyboard.height * 0.5)) - elementsVerticalMargin, keyboard.height * 0.25);
 	settingsButton.resize(keyboard.width * 0.5, settingsButtonHeight);
 	settingsButton.position(width * 0.5, keyboard.y + (keyboard.height * 0.5) + (elementsVerticalMargin * 0.5) + (settingsButton.height * 0.5));
+
+	const settingsPanelSize = Math.min(width + elementsHorizontalMargin, height * 0.75);
+	settingsPanel.resize(settingsPanelSize, settingsPanelSize);
+	settingsPanel.position(width * 0.5, height * 0.5);
 }
 
 function render() {
@@ -77,6 +85,7 @@ function render() {
 	board.render(context);
 	keyboard.render(context);
 	settingsButton.render(context);
+	settingsPanel.render(context);
 }
 
 function onResize() {
@@ -126,12 +135,14 @@ function onBackspacePress() {
 	render();
 }
 
-function onSettingsPress() {
-	// board.visible = false;
-	// keyboard.visible = false;
-	// settingsButton.visible = false;
+function toggleSettingsPanel() {
+	const isVisible = settingsPanel.visible;
 
-	// settingsPanel.visible = true;
+	board.visible = isVisible;
+	keyboard.visible = isVisible;
+	settingsButton.visible = isVisible;
 
-	// render();
+	settingsPanel.visible = !isVisible;
+
+	render();
 }
