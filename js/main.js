@@ -25,6 +25,9 @@ const board = new Board();
 const keyboard = new Keyboard(logic);
 const settingsButton = new TextBox("settings");
 const settingsPanel = new SettingsPanel();
+
+board.stroke = false;
+keyboard.stroke = false;
 settingsPanel.visible = false;
 
 inputMgr.addElement(keyboard);

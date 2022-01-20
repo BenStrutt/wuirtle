@@ -107,13 +107,15 @@ export class Keyboard extends RenderNode {
 	render(context) {
 		if (!this.visible) { return; }
 
-		context.strokeStyle = "blue";
-		context.strokeRect(
-			this.x - this.width + (this.width * 0.5),
-			this.y - this.height + (this.height * 0.5),
-			this.width,
-			this.height,
-		);
+		if (this.stroke) {
+			context.strokeStyle = "blue";
+			context.strokeRect(
+				this.x - this.width + (this.width * 0.5),
+				this.y - this.height + (this.height * 0.5),
+				this.width,
+				this.height,
+			);
+		}
 
 		for (const letter of this.#alphaKeys) {
 			letter.render(context);

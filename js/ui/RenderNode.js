@@ -38,6 +38,12 @@ export class RenderNode {
 	/** @type {RenderNode} */
 	parent = null
 
+	/** @type {boolean} */
+	fill = true;
+
+	/** @type {boolean} */
+	stroke = true;
+
 	/** @type {number[]} */
 	get parentWorldPosition() {
 		return this.parent ? this.parent.parentWorldPosition : [this.x, this.y];

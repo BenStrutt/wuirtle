@@ -111,13 +111,15 @@ export class Board extends RenderNode {
 	render(context) {
 		if (!this.visible) { return; }
 
-		context.strokeStyle = "blue";
-		context.strokeRect(
-			this.x - this.width + (this.width * 0.5),
-			this.y - this.height + (this.height * 0.5),
-			this.width,
-			this.height,
-		);
+		if (this.stroke) {
+			context.strokeStyle = "blue";
+			context.strokeRect(
+				this.x - this.width + (this.width * 0.5),
+				this.y - this.height + (this.height * 0.5),
+				this.width,
+				this.height,
+			);
+		}
 
 		this.#tiles.forEach(tile => tile.render(context));
 	}
