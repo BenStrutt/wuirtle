@@ -43,11 +43,15 @@ function resize() {
 	canvas.width = width;
 	canvas.height = height;
 
-	board.resize(500, 500);
+	const widthMargin = 10;
+	const boardHeight = Math.min(height * 0.6, width - (widthMargin * 2));
+	const keyboardHeight = Math.min(height * 0.3, ((width - (widthMargin * 2)) * 0.5));
+
+	board.resize(boardHeight, boardHeight);
 	board.position(width * 0.5, height * 0.33);
 
-	keyboard.resize(500, 250);
-	keyboard.position(width * 0.5, height - (keyboard.height * 0.66));
+	keyboard.resize(keyboardHeight * 2, keyboardHeight);
+	keyboard.position(width * 0.5, height * 0.8);
 }
 
 function render() {
