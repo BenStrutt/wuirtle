@@ -109,6 +109,8 @@ export class Board extends RenderNode {
 	 * @param {CanvasRenderingContext2D} context
 	 */
 	render(context) {
+		if (!this.visible) { return; }
+
 		context.strokeStyle = "blue";
 		context.strokeRect(
 			this.x - this.width + (this.width * 0.5),
@@ -134,8 +136,8 @@ export class Board extends RenderNode {
 			const positionY = (this.#rows * 0.5) - (this.#rows - y) + 0.5;
 			const offsetY = this.height / this.#rows;
 			const size = Math.min(
-				(this.width * 0.75) / this.#columns,
-				(this.height * 0.75) / this.#rows,
+				(this.width * 0.9) / this.#columns,
+				(this.height * 0.9) / this.#rows,
 			);
 			const fontSize = Math.floor(size * 0.75);
 

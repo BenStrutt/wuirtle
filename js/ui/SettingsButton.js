@@ -12,6 +12,8 @@ export class SettingsButton extends RoundBox {
 	 * @param {CanvasRenderingContext2D} context 
 	 */
 	render(context) {
+		if (!this.visible) { return; }
+
 		super.render(context);
 
 		const minSide = Math.min(this.width, this.height);

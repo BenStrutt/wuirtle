@@ -36,6 +36,8 @@ export class InputManager {
 	 */
 	_checkElementsForEmission(x, y) {
 		for (const element of this.#uiElements) {
+			if (!element.visible) { continue; }
+
 			if (element.isInBounds(x, y)) {
 				const toReturn = this._emitChildren(element, x, y);
 

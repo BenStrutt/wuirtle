@@ -4,6 +4,7 @@ import { Logic } from "./Logic.js";
 import { Board } from "./ui/Board.js";
 import { Keyboard } from "./ui/Keyboard.js";
 import { SettingsButton } from "./ui/SettingsButton.js";
+import { SettingsPanel } from "./ui/SettingsPanel.js";
 import { InputManager } from "./InputManager.js";
 
 const canvas = document.createElement("canvas");
@@ -22,10 +23,11 @@ const inputMgr = new InputManager();
 const board = new Board();
 const keyboard = new Keyboard(logic);
 const settingsButton = new SettingsButton();
-// const settingsPanel = new SettingsPanel();
+const settingsPanel = new SettingsPanel();
 
 inputMgr.addElement(keyboard);
 inputMgr.addElement(settingsButton);
+inputMgr.addElement(settingsPanel);
 
 document.addEventListener("mousedown", inputMgr.onMouseDown.bind(inputMgr));
 document.addEventListener("touchstart", inputMgr.onTouchStart.bind(inputMgr));
@@ -51,18 +53,22 @@ function resize() {
 	canvas.width = width;
 	canvas.height = height;
 
-	const widthMargin = 10;
-	const boardHeight = Math.min(height * 0.6, width - (widthMargin * 2));
-	const keyboardHeight = Math.min(height * 0.3, ((width - (widthMargin * 2)) * 0.5));
+	// I promise that I'll make this much easier to parse at some point
+
+	const elementsVerticalMargin = 10;
+	const boardsGap = 10;
+	const boardHeight = Math.min(height * 0.6, width - (elementsVerticalMargin * 2));
+	const keyboardHeight = Math.min(height * 0.3, ((width - (elementsVerticalMargin * 2)) * 0.5));
 
 	board.resize(boardHeight, boardHeight);
 	board.position(width * 0.5, height * 0.33);
 
 	keyboard.resize(keyboardHeight * 2, keyboardHeight);
-	keyboard.position(width * 0.5, height * 0.8);
+	keyboard.position(width * 0.5, board.y + (board.height * 0.5) + boardsGap + (keyboard.height * 0.5));
 
-	settingsButton.resize(keyboard.width * 0.5, window.innerHeight - (keyboard.y + (keyboard.height * 0.5)));
-	settingsButton.position(width * 0.5, height - (settingsButton.height * 0.5));
+	const settingsButtonHeight = Math.min(height - (keyboard.y + (keyboard.height * 0.5)) - elementsVerticalMargin, keyboard.height * 0.25);
+	settingsButton.resize(keyboard.width * 0.5, settingsButtonHeight);
+	settingsButton.position(width * 0.5, keyboard.y + (keyboard.height * 0.5) + (elementsVerticalMargin * 0.5) + (settingsButton.height * 0.5));
 }
 
 function render() {
@@ -121,5 +127,11 @@ function onBackspacePress() {
 }
 
 function onSettingsPress() {
-	//
+	// board.visible = false;
+	// keyboard.visible = false;
+	// settingsButton.visible = false;
+
+	// settingsPanel.visible = true;
+
+	// render();
 }

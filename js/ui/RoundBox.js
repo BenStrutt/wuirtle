@@ -57,6 +57,8 @@ export class RoundBox extends RenderNode {
 	 * @param {CanvasRenderingContext2D} context 
 	 */
 	render(context) {
+		if (!this.visible) { return; }
+
 		const width = this.width;
 		const height = this.height;
 		const radius = 10;

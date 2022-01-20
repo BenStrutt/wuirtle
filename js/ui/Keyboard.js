@@ -105,6 +105,8 @@ export class Keyboard extends RenderNode {
 	 * @param {CanvasRenderingContext2D} context
 	 */
 	render(context) {
+		if (!this.visible) { return; }
+
 		context.strokeStyle = "blue";
 		context.strokeRect(
 			this.x - this.width + (this.width * 0.5),
