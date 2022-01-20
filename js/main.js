@@ -1,8 +1,9 @@
 "use strict";
 
 import { Logic } from "./Logic.js";
-import { Board } from "./objects/Board.js";
-import { Keyboard } from "./objects/Keyboard.js";
+import { Board } from "./ui/Board.js";
+import { Keyboard } from "./ui/Keyboard.js";
+import { SettingsButton } from "./ui/SettingsButton.js";
 import { InputManager } from "./InputManager.js";
 
 const canvas = document.createElement("canvas");
@@ -20,8 +21,11 @@ const logic = new Logic();
 const inputMgr = new InputManager();
 const board = new Board();
 const keyboard = new Keyboard(logic);
+const settingsButton = new SettingsButton();
+// const settingsPanel = new SettingsPanel();
 
 inputMgr.addElement(keyboard);
+inputMgr.addElement(settingsButton);
 
 document.addEventListener("mousedown", inputMgr.onMouseDown.bind(inputMgr));
 document.addEventListener("touchstart", inputMgr.onTouchStart.bind(inputMgr));
@@ -33,6 +37,8 @@ document.addEventListener("touchstart", inputMgr.onTouchStart.bind(inputMgr));
 logic.onLetterPress.receive(onLetterPress);
 logic.onEnterPress.receive(onEnterPress);
 logic.onBackspacePress.receive(onBackspacePress);
+
+settingsButton.onClick.receive(onSettingsPress);
 
 resize();
 render();
@@ -53,6 +59,9 @@ function resize() {
 
 	keyboard.resize(keyboardHeight * 2, keyboardHeight);
 	keyboard.position(width * 0.5, height * 0.8);
+
+	settingsButton.resize(keyboard.width * 0.5, window.innerHeight - (keyboard.y + (keyboard.height * 0.5)));
+	settingsButton.position(width * 0.5, height - (settingsButton.height * 0.5));
 }
 
 function render() {
@@ -60,6 +69,7 @@ function render() {
 
 	board.render(context);
 	keyboard.render(context);
+	settingsButton.render(context);
 }
 
 function onResize() {
@@ -107,4 +117,8 @@ function onEnterPress(word, guess) {
 function onBackspacePress() {
 	board.removeLetter();
 	render();
+}
+
+function onSettingsPress() {
+	//
 }

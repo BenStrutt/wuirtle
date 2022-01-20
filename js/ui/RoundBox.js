@@ -1,6 +1,5 @@
 "use strict";
 
-import { Keyboard } from "./Keyboard.js";
 import { RenderNode } from "./RenderNode.js";
 
 export class RoundBox extends RenderNode {
@@ -61,9 +60,16 @@ export class RoundBox extends RenderNode {
 		const width = this.width;
 		const height = this.height;
 		const radius = 10;
-		const [ parentX, parentY ] = this.parentWorldPosition;
-		const x = (parentX - (this.parent.width * 0.5)) + (this.x + width * 0.5);
-		const y = (parentY - (this.parent.height * 0.5)) + (this.y + height * 0.5);
+
+		let { x, y } = this;
+		if (this.parent) {
+			const [ parentX, parentY ] = this.parentWorldPosition;
+			x = (parentX - (this.parent.width * 0.5)) + this.x;
+			y = (parentY - (this.parent.height * 0.5)) + this.y;
+		}
+
+		x += this.width * 0.5;
+		y += this.height * 0.5;
 
 		context.fillStyle = this.fillStyle;
 		context.strokeStyle = this.strokeStyle;

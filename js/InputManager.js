@@ -1,12 +1,6 @@
 "use strict";
 
-import { RenderNode } from "./objects/RenderNode.js";
-
-/**
- * The minimum amount of time, in ms, between tap/click events.
- * @type {number}
- */
-const TAP_THROTTLE_TIME = 300;
+import { RenderNode } from "./ui/RenderNode.js";
 
 export class InputManager {
 	/** @type {RenderNode[]} */

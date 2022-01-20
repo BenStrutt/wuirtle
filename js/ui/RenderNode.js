@@ -29,6 +29,9 @@ export class RenderNode {
 	/** @type {number} */
 	anchorY = 0.5;
 
+	/** @type {boolean} */
+	visible = true;
+
 	/** @type {RenderNode[]} */
 	children = [];
 
