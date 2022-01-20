@@ -2,6 +2,12 @@
 
 import { RenderNode } from "./objects/RenderNode.js";
 
+/**
+ * The minimum amount of time, in ms, between tap/click events.
+ * @type {number}
+ */
+const TAP_THROTTLE_TIME = 300;
+
 export class InputManager {
 	/** @type {RenderNode[]} */
 	#uiElements = [];
@@ -14,10 +20,27 @@ export class InputManager {
 		this.#uiElements.push(element);
 	}
 
-	/** @param {MouseEvent} ev Browser data from mouse down event */
-	onMouseDown(ev) {
-		const { x, y } = ev;
+	/** @param {MouseEvent} eventData Browser data from mouse down event */
+	onMouseDown(eventData) {
+		const { x, y } = eventData;
 
+		this._checkElementsForEmission(x, y);
+	}
+
+	/** @param {TouchEvent} eventData */
+	onTouchStart(eventData) {
+		const { pageX, pageY } = eventData.touches.item(0);
+
+		this._checkElementsForEmission(pageX, pageY);
+	}
+
+	/**
+	 * Checks each element that has been added to this input manager to see
+	 * whether the node needs to be emitted or to have its children iterated over.
+	 * @param {number} x
+	 * @param {number} y
+	 */
+	_checkElementsForEmission(x, y) {
 		for (const element of this.#uiElements) {
 			if (element.isInBounds(x, y)) {
 				const toReturn = this._emitChildren(element, x, y);
