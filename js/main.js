@@ -12,11 +12,12 @@ const context = canvas.getContext("2d");
 
 context.imageSmoothingEnabled = true;
 canvas.width = window.innerWidth;
-canvas.height = window.innerHeight - 5;
+canvas.height = window.innerHeight;
 canvas.style.backgroundColor = "#fff5db";
 
 window.onresize = onResize;
 document.body.appendChild(canvas);
+document.body.style.overflow = "hidden";
 
 const logic = new Logic();
 const inputMgr = new InputManager();
@@ -51,7 +52,7 @@ render();
 
 function resize() {
 	const width = window.innerWidth;
-	const height = window.innerHeight - 5;
+	const height = window.innerHeight;
 
 	canvas.width = width;
 	canvas.height = height;
