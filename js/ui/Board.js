@@ -93,6 +93,15 @@ export class Board extends RenderNode {
 		}
 	}
 
+	reset() {
+		for (const tile of this.#tiles) {
+			tile.fillStyle = "#fff5db";
+			tile.letter = "";
+		}
+
+		this.#activeIndex = 0;
+	}
+
 	/**
 	 * @override
 	 * @param {number} width The width of the game board.

@@ -100,6 +100,12 @@ export class Keyboard extends RenderNode {
 		}
 	}
 
+	reset() {
+		for (const key of this.#alphaKeys) {
+			key.fillStyle = "#fff5db";
+		}
+	}
+
 	/**
 	 * Renders the board and all its elements
 	 * @param {CanvasRenderingContext2D} context

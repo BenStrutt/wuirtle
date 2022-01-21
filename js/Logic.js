@@ -14,6 +14,8 @@ export const MoveType = (function() {
 		PressLetter: _enum++,
 		PressEnter: _enum++,
 		PressBackspace: _enum++,
+		PressReveal: _enum++,
+		PressReplay: _enum++,
 	};
 })();
 
@@ -22,6 +24,8 @@ export class Logic {
 	onLetterPress = new Signal();
 	onBackspacePress = new Signal();
 	onEnterPress = new Signal();
+	onReplayPress = new Signal();
+	onRevealPress = new Signal();
 
 	/**
 	 * A trie structure to hold our entire dictionary of valid English words.
@@ -67,6 +71,12 @@ export class Logic {
 
 	/**
 	 * @private
+	 * @type {boolean}
+	 */
+	#gameOver = false;
+
+	/**
+	 * @private
 	 * @type {Function[]}
 	 */
 	#inputFunctions;
@@ -81,14 +91,14 @@ export class Logic {
 
 		this.#dictionary.load(fullDict);
 
-		const filteredWords = commonWords.filter(word => word.length === wordLength);
-		const commonWordsIndex = Math.floor(Math.random() * filteredWords.length);
-		this.#word = filteredWords[commonWordsIndex];
+		this._setNewWord();
 
 		this.#inputFunctions = [
 			this._letterInput.bind(this),
 			this._enterInput.bind(this),
 			this._backspaceInput.bind(this),
+			this._revealInput.bind(this),
+			this._replayInput.bind(this),
 		];
 	}
 
@@ -101,10 +111,22 @@ export class Logic {
 	}
 
 	/**
+	 * Sets a new word to be guessed.
+	 * @private
+	 */
+	_setNewWord() {
+		const filteredWords = commonWords.filter(word => word.length === this.#wordLength);
+		const commonWordsIndex = Math.floor(Math.random() * filteredWords.length);
+		this.#word = filteredWords[commonWordsIndex];
+	}
+
+	/**
 	 * Handles a letter press by the user.
 	 * @private
 	 */
 	_letterInput(data) {
+		if (this.#gameOver) { return; }
+
 		const letter = data.letter;
 		const maxLength = (this.#activeRow * this.#wordLength) + this.#wordLength;
 
@@ -123,6 +145,8 @@ export class Logic {
 	 * @private
 	 */
 	_enterInput() {
+		if (this.#gameOver) { return; }
+
 		const maxSize = (this.#activeRow * this.#wordLength) + this.#wordLength;
 		const guess = this.#guesses.slice(this.#guesses.length - this.#wordLength);
 
@@ -134,10 +158,10 @@ export class Logic {
 
 		this.onEnterPress.emit(this.#word, guess);
 
-		if (++this.#activeRow > this.#guessAmount) {
-			// TODO: fail the player
-			return;
-		}
+		const isOutOfGuesses = ++this.#activeRow > this.#guessAmount;
+		const isWinningGuess = guess.join("").toLowerCase() === this.#word;
+
+		if (isOutOfGuesses || isWinningGuess) { this.#gameOver = true; }
 	}
 
 	/**
@@ -145,6 +169,8 @@ export class Logic {
 	 * @private
 	 */
 	_backspaceInput() {
+		if (this.#gameOver) { return; }
+
 		const minSize = this.#activeRow * this.#wordLength;
 
 		if (this.#guesses.length === minSize) {
@@ -155,5 +181,26 @@ export class Logic {
 
 		this.onBackspacePress.emit();
 		this.#guesses.pop();
+	}
+
+	/**
+	 * Handles a backspace press by the user.
+	 * @private
+	 */
+	_revealInput() {
+		//
+	}
+
+	/**
+	 * Handles a backspace press by the user.
+	 * @private
+	 */
+	_replayInput() {
+		this._setNewWord();
+		this.#gameOver = false;
+		this.#activeRow = 0;
+		this.#guesses.length = 0;
+
+		this.onReplayPress.emit();
 	}
 }

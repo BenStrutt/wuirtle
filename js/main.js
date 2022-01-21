@@ -1,6 +1,6 @@
 "use strict";
 
-import { Logic } from "./Logic.js";
+import { Logic, MoveType } from "./Logic.js";
 import { Board } from "./ui/Board.js";
 import { Keyboard } from "./ui/Keyboard.js";
 import { SettingsPanel } from "./ui/SettingsPanel.js";
@@ -29,6 +29,8 @@ const board = new Board();
 const keyboard = new Keyboard(logic);
 const settingsButton = new TextBox("settings");
 const settingsPanel = new SettingsPanel();
+const replayButton = new TextBox("replay");
+const revealButton = new TextBox("reveal")
 
 // Set out initial ui element properties.
 board.stroke = false;
@@ -39,6 +41,8 @@ settingsPanel.visible = false;
 inputMgr.addElement(keyboard);
 inputMgr.addElement(settingsButton);
 inputMgr.addElement(settingsPanel);
+inputMgr.addElement(replayButton);
+inputMgr.addElement(revealButton);
 
 // Register document event listeners
 document.addEventListener("mousedown", inputMgr.onMouseDown.bind(inputMgr));
@@ -53,10 +57,13 @@ document.addEventListener("touchend", event => event.preventDefault());
 logic.onLetterPress.receive(onLetterPress);
 logic.onEnterPress.receive(onEnterPress);
 logic.onBackspacePress.receive(onBackspacePress);
+logic.onReplayPress.receive(onReplayPress);
+logic.onRevealPress.receive(onRevealPress);
 
 settingsButton.onClick.receive(toggleSettingsPanel);
-
 settingsPanel.onClose.receive(toggleSettingsPanel);
+replayButton.onClick.receive(() => logic.input(MoveType.PressReplay));
+revealButton.onClick.receive(() => logic.input(MoveType.PressReveal));
 
 // Resize elements to window dimensions and render ui elements.
 resize();
@@ -74,7 +81,6 @@ function resize() {
 	canvas.height = height;
 
 	const elementsVerticalMargin = 10;
-	const elementsHorizontalMargin = 10;
 
 	const boardHeight = Math.min(height * 0.6, width - (elementsVerticalMargin * 2));
 	const keyboardHeight = Math.min(height * 0.3, ((width - (elementsVerticalMargin * 2)) * 0.5));
@@ -86,12 +92,22 @@ function resize() {
 	keyboard.position(width * 0.5, board.y + (board.height * 0.5) + elementsVerticalMargin + (keyboard.height * 0.5));
 
 	const settingsButtonHeight = Math.min(height - (keyboard.y + (keyboard.height * 0.5)) - elementsVerticalMargin, keyboard.height * 0.25);
-	settingsButton.resize(keyboard.width * 0.5, settingsButtonHeight);
+	settingsButton.resize(keyboard.width * 0.33, settingsButtonHeight);
 	settingsButton.position(width * 0.5, keyboard.y + (keyboard.height * 0.5) + (elementsVerticalMargin * 0.5) + (settingsButton.height * 0.5));
 
-	const settingsPanelSize = Math.min(width + elementsHorizontalMargin, height * 0.75);
-	settingsPanel.resize(settingsPanelSize, settingsPanelSize);
+	const settingsPanelSize = Math.min(width, height * 0.75);
+	settingsPanel.resize(settingsPanelSize - 10, settingsPanelSize - 10);
 	settingsPanel.position(width * 0.5, height * 0.5);
+
+	const revealBtnWidth = settingsButton.width * 0.5;
+	const revealBtnX = keyboard.x - (keyboard.width * 0.5) + (revealBtnWidth * 0.5);
+	revealButton.resize(revealBtnWidth, settingsButton.height);
+	revealButton.position(revealBtnX, settingsButton.y);
+
+	const replayBtnWidth = settingsButton.width * 0.5;
+	const replayBtnX = keyboard.x + (keyboard.width * 0.5) - (replayBtnWidth * 0.5);
+	replayButton.resize(replayBtnWidth, settingsButton.height);
+	replayButton.position(replayBtnX, settingsButton.y);
 }
 
 /**
@@ -104,6 +120,8 @@ function render() {
 	keyboard.render(context);
 	settingsButton.render(context);
 	settingsPanel.render(context);
+	revealButton.render(context);
+	replayButton.render(context);
 }
 
 /**
@@ -168,8 +186,33 @@ function toggleSettingsPanel() {
 	board.visible = isVisible;
 	keyboard.visible = isVisible;
 	settingsButton.visible = isVisible;
+	replayButton.visible = isVisible;
+	revealButton.visible = isVisible;
 
 	settingsPanel.visible = !isVisible;
 
 	render();
+}
+
+/**
+ * @callback onReplayPressCallback
+ * @returns {void}
+ */
+
+ /** @type {onReplayPressCallback} */
+function onReplayPress() {
+	board.reset();
+	keyboard.reset();
+
+	render();
+}
+
+/**
+ * @callback onRevealPressCallback
+ * @returns {void}
+ */
+
+ /** @type {onRevealPressCallback} */
+function onRevealPress() {
+
 }
