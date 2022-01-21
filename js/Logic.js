@@ -188,7 +188,8 @@ export class Logic {
 	 * @private
 	 */
 	_revealInput() {
-		//
+		this.#gameOver = true;
+		this.onRevealPress.emit(this.#word);
 	}
 
 	/**

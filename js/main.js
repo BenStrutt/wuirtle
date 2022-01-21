@@ -4,6 +4,7 @@ import { Logic, MoveType } from "./Logic.js";
 import { Board } from "./ui/Board.js";
 import { Keyboard } from "./ui/Keyboard.js";
 import { SettingsPanel } from "./ui/SettingsPanel.js";
+import { RevealPanel } from "./ui/RevealPanel.js";
 import { InputManager } from "./InputManager.js";
 import { TextBox } from "./ui/TextBox.js";
 
@@ -31,11 +32,13 @@ const settingsButton = new TextBox("settings");
 const settingsPanel = new SettingsPanel();
 const replayButton = new TextBox("replay");
 const revealButton = new TextBox("reveal")
+const revealPanel = new RevealPanel();
 
 // Set out initial ui element properties.
 board.stroke = false;
 keyboard.stroke = false;
 settingsPanel.visible = false;
+revealPanel.visible = false;
 
 // Add our interactive ui elements to our input manager.
 inputMgr.addElement(keyboard);
@@ -43,6 +46,7 @@ inputMgr.addElement(settingsButton);
 inputMgr.addElement(settingsPanel);
 inputMgr.addElement(replayButton);
 inputMgr.addElement(revealButton);
+inputMgr.addElement(revealPanel);
 
 // Register document event listeners
 document.addEventListener("mousedown", inputMgr.onMouseDown.bind(inputMgr));
@@ -58,12 +62,13 @@ logic.onLetterPress.receive(onLetterPress);
 logic.onEnterPress.receive(onEnterPress);
 logic.onBackspacePress.receive(onBackspacePress);
 logic.onReplayPress.receive(onReplayPress);
-logic.onRevealPress.receive(onRevealPress);
+logic.onRevealPress.receive(toggleRevealPanel);
 
 settingsButton.onClick.receive(toggleSettingsPanel);
 settingsPanel.onClose.receive(toggleSettingsPanel);
 replayButton.onClick.receive(() => logic.input(MoveType.PressReplay));
 revealButton.onClick.receive(() => logic.input(MoveType.PressReveal));
+revealPanel.onClose.receive(toggleRevealPanel);
 
 // Resize elements to window dimensions and render ui elements.
 resize();
@@ -99,15 +104,19 @@ function resize() {
 	settingsPanel.resize(settingsPanelSize - 10, settingsPanelSize - 10);
 	settingsPanel.position(width * 0.5, height * 0.5);
 
-	const revealBtnWidth = settingsButton.width * 0.5;
+	const revealBtnWidth = settingsButton.width * 0.75;
 	const revealBtnX = keyboard.x - (keyboard.width * 0.5) + (revealBtnWidth * 0.5);
 	revealButton.resize(revealBtnWidth, settingsButton.height);
 	revealButton.position(revealBtnX, settingsButton.y);
 
-	const replayBtnWidth = settingsButton.width * 0.5;
+	const replayBtnWidth = settingsButton.width * 0.75;
 	const replayBtnX = keyboard.x + (keyboard.width * 0.5) - (replayBtnWidth * 0.5);
 	replayButton.resize(replayBtnWidth, settingsButton.height);
 	replayButton.position(replayBtnX, settingsButton.y);
+
+	const revealPanelSize = Math.min(width, height * 0.75);
+	revealPanel.resize(revealPanelSize - 10, revealPanelSize - 10);
+	revealPanel.position(width * 0.5, height * 0.5);
 }
 
 /**
@@ -122,6 +131,7 @@ function render() {
 	settingsPanel.render(context);
 	revealButton.render(context);
 	replayButton.render(context);
+	revealPanel.render(context);
 }
 
 /**
@@ -195,6 +205,29 @@ function toggleSettingsPanel() {
 }
 
 /**
+ * @callback toggleRevealPanelCallback
+ * @param {string} word The word to display.
+ * @returns {void}
+ */
+
+ /** @type {toggleRevealPanelCallback} */
+ function toggleRevealPanel(word = "") {
+	revealPanel.text = word;
+
+	const isVisible = revealPanel.visible;
+
+	board.visible = isVisible;
+	keyboard.visible = isVisible;
+	settingsButton.visible = isVisible;
+	replayButton.visible = isVisible;
+	revealButton.visible = isVisible;
+
+	revealPanel.visible = !isVisible;
+
+	render();
+}
+
+/**
  * @callback onReplayPressCallback
  * @returns {void}
  */
@@ -205,14 +238,4 @@ function onReplayPress() {
 	keyboard.reset();
 
 	render();
-}
-
-/**
- * @callback onRevealPressCallback
- * @returns {void}
- */
-
- /** @type {onRevealPressCallback} */
-function onRevealPress() {
-
 }

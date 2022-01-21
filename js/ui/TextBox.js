@@ -25,18 +25,28 @@ export class TextBox extends RoundBox {
 
 		super.render(context);
 
-		const minSide = Math.min(this.width, this.height);
-		const fontSize = this.fontSize ? this.fontSize : Math.floor(minSide * 0.5);
-		const font = `${fontSize}px Arial, sans-serif`;
-
-		context.font = font;
 		context.textAlign = "center";
 		context.textBaseline = "alphabetic";
 		context.fillStyle = "black";
 
-		let { x, y } = this;
+		// I know that this is a mess, I promise I'll fix it.
+		// This just ensures that the rendered text width is
+		// no larger than half of the box's width.
+		const minSide = Math.min(this.width, this.height);
+		let fontSize = this.fontSize ? this.fontSize : Math.floor(minSide * 0.5);
+		let font = `${fontSize}px Arial, sans-serif`;
+		context.font = font;
+		let width = context.measureText(this.text).width;
+		while (width > this.width * 0.5) {
+			fontSize--;
+			font = `${fontSize}px Arial, sans-serif`;
+			context.font = font;
+			width = context.measureText(this.text).width;
+		} 
 
-		const { actualBoundingBoxAscent } = context.measureText(this.text);
+
+		let { x, y } = this;
+		const actualBoundingBoxAscent = context.measureText(this.text).actualBoundingBoxAscent;
 		const halfHeight = Math.ceil(actualBoundingBoxAscent) * 0.5;
 
 		if (this.parent) {
