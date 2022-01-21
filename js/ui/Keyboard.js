@@ -100,6 +100,9 @@ export class Keyboard extends RenderNode {
 		}
 	}
 
+	/**
+	 * Resets all keys to default fill color.
+	 */
 	reset() {
 		for (const key of this.#alphaKeys) {
 			key.fillStyle = "#fff5db";

@@ -27,7 +27,7 @@ async function generate() {
 	});
 
 	await fsPromises.writeFile(
-		`../../site/js/generated/${arrName}.js`,
+		`../../js/generated/${arrName}.js`,
 		`export const ${arrName} = [${wordArr.join(",")}];`
 	);
 

@@ -93,6 +93,9 @@ export class Board extends RenderNode {
 		}
 	}
 
+	/**
+	 * Resets each tile's letter and fill color.
+	 */
 	reset() {
 		for (const tile of this.#tiles) {
 			tile.fillStyle = "#fff5db";
