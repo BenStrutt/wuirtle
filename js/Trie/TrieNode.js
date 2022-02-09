@@ -70,3 +70,4 @@ export class TrieNode {
 		return child instanceof TrieNode;
 	}
 }
+

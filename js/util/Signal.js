@@ -14,3 +14,4 @@ export class Signal {
 		this.#listeners.push(callback);
 	}
 }
+

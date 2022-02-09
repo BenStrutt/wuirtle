@@ -32,3 +32,4 @@ export class SettingsPanel extends TextBox {
 		context.fillText("coming soon", this.x, this.y);
 	}
 }
+

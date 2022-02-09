@@ -27,3 +27,4 @@ export class LetterTile extends TextBox {
 		this.#_letter = letter;
 	}
 }
+

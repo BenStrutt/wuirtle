@@ -72,3 +72,4 @@ export class InputManager {
 		return false;
 	}
 }
+

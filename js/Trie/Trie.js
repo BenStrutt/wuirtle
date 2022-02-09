@@ -76,3 +76,4 @@ export class Trie {
 		return currentNode.isLeaf;
 	}
 }
+

@@ -101,3 +101,4 @@ export class RenderNode {
 		// To be overwritten in child classes
 	}
 }
+

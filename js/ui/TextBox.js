@@ -59,3 +59,4 @@ export class TextBox extends RoundBox {
 		context.fillText(this.text, x, y + halfHeight);
 	}
 }
+

@@ -33,3 +33,4 @@ export class RevealPanel extends TextBox {
 		this.#closeButton.render(context);
 	}
 }
+
